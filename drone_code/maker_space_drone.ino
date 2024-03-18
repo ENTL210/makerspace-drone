@@ -61,7 +61,7 @@ void setup() {
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 
   // Calibrate the motor if needed
-  motorCalibration(); 
+  // motorCalibration(); 
 }
 
 void loop() {
@@ -71,10 +71,10 @@ void loop() {
   stationaryGravity = sqrt(xAccel * xAccel + yAccel * yAccel + zAccel * zAccel);
 
   // Calculate the roll...
-  rollAngle = atan2f(yAccel, stationaryGravity) * (180 / pi);
+  rollAngle = -atan2f(yAccel, stationaryGravity) * (180 / pi);
 
   // Compute the pitch angle...
-  pitchAngle = asinf(xAccel / stationaryGravity) * (180 / pi);
+  pitchAngle = -asinf(xAccel / stationaryGravity) * (180 / pi);
 
   pitchOutput = calculatePID(pitchAngle, pitchLastError, pitchEquilibrium, pitchKp, pitchKd);
   rollOutput = calculatePID(rollAngle, rollLastError, rollEquilibrium, rollKp, rollKd);
@@ -127,14 +127,14 @@ void readAccelerometer() {
   rawZ = 0;
 
   for (float i = 0; i < sampleSize; i++) {
-    rawX += a.acceleration.x;
-    rawY += a.acceleration.y;
-    rawZ += a.acceleration.z - 0.40;
+    rawX += a.acceleration.x - 0.6;
+    rawY += a.acceleration.y - 0.2;
+    rawZ += a.acceleration.z;
   }
 
-  xAccel = rawX / sampleSize;
-  yAccel = rawY / sampleSize;
-  zAccel = rawZ / sampleSize;
+  xAccel = (rawX / sampleSize);
+  yAccel = (rawY / sampleSize);
+  zAccel = (rawZ / sampleSize);
 
   delay(200);
 }
